@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git merge" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message to
+# stderr if it wants to stop the merge commit.
+#
+# To enable this hook, rename this file to "pre-merge-commit".
+
+. git-sh-setup
+
+
+if [ -e .githooks/annex/stop.sh ]
+then
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1
+  then
+    # Check if it is a git-annex repository
+    if [ -d "${GIT_DIR}/annex" ] # timeout 2s git annex info >/dev/null 2>&
+    then
+      if [ -r "${GIT_DIR}/annex/daemon.pid" ] && xargs ps < "${GIT_DIR}/annex/daemon.pid" || .githooks/annex/git-annex-assistant-allowed.sh
+      then
+        .githooks/annex/stop.sh $(cat "${GIT_DIR}/annex/daemon.pid")
+        echo "$0: ⚠️  WARNING: stopping git annex assistant."
+      else
+        echo "$0: ✅ NOTICE: git annex assistant not running."
+      fi
+    fi
+  fi
+fi
+
+
+
+
+
+test -x ".githooks/pre-commit" &&
+  exec ".githooks/pre-commit"
+:

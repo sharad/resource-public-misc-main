@@ -1,0 +1,16 @@
+#!/bin/sh
+
+
+. git-sh-setup
+export GIT_DIR
+
+if [ -d "${GIT_DIR}/annex" ] # timeout 2s git annex info >/dev/null 2>&
+then
+    if [ -e "${GIT_DIR}/hooks/post-receive" ]
+    then
+        "${GIT_DIR}/hooks/post-receive"
+    else
+        # automatically configured by git-annex
+        if git annex post-receive --help >/dev/null 2>&1; then git annex post-receive; fi
+    fi
+fi

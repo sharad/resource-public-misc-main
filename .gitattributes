@@ -1,0 +1,194 @@
+# In git-annex, by default, files under annex control are replaced by symlinks pointing to their content in the object store. But if you want some files to remain as regular files (not symlinks), there are a few supported options depending on your goal.
+# ✅ Goal: Keep specific files as normal (not symlinks)
+#
+# Here are your main options:
+# Option 1: Use git-annex add --include and --exclude selectively
+#
+# Add only the files you want as symlinks, and leave others as regular files by not adding them to git-annex at all.
+#
+# git annex add --exclude '*.txt'
+#
+# This means .txt files remain as normal files under Git (not annexed).
+# Option 2: Use .gitattributes to control annexing per path
+#
+# This is the best way to tell git-annex to exclude specific files from being annexed, and keep them as regular files in Git.
+# Example:
+#
+# Create a .gitattributes file:
+#
+# *.jpg annex.largefiles=nothing
+# *.pdf annex.largefiles=nothing
+#
+# This will cause git-annex add to skip these files — they go to Git as regular files.
+#
+# Then:
+#
+# git add .gitattributes
+# git commit -m "Exclude some files from git-annex"
+# git annex add .
+#
+# You can also use directories:
+#
+# not_annexed_dir/** annex.largefiles=nothing
+#
+# Option 3: Drop from git-annex and re-add as regular file
+#
+# If a file is already under git-annex and a symlink, but you now want it as a normal file, do this:
+#
+# git annex unannex path/to/file
+#
+# This:
+#
+#     Moves the file back into the Git repository as a regular file (not symlink)
+#
+#     Removes it from git-annex tracking
+#
+# Then:
+#
+# git add path/to/file
+# git commit -m "Made file a normal git file"
+#
+# 🚫 What not to do
+#
+# Don’t try to manually replace symlinks with real files while git-annex is managing them — this will confuse annex and possibly break things.
+#
+# Always use git annex unannex or .gitattributes to keep things clean.
+# 🔁 Summary
+# Task	Command / Setting
+# Prevent new files from being annexed	.gitattributes with annex.largefiles=nothing
+# Convert annexed file back to normal	git annex unannex <file>
+# Add only some files to annex	git annex add --include/--exclude
+#
+# Would you like a ready .gitattributes file example that keeps only files over 10MB in annex and others in Git? No
+#
+
+
+
+
+
+
+# Annex all files larger than 100KB
+*                          annex.largefiles=(largerthan=100kb)
+*.gpg                      annex.largefiles=(largerthan=100kb)
+*.asc                      annex.largefiles=(largerthan=100kb)
+
+# Never annex source code or config files
+*.c                        annex.largefiles=nothing
+*.c.gpg                    annex.largefiles=nothing
+*.c.asc                    annex.largefiles=nothing
+
+*.h                        annex.largefiles=nothing
+*.h.gpg                    annex.largefiles=nothing
+*.h.asc                    annex.largefiles=nothing
+
+*.cpp                      annex.largefiles=nothing
+*.cpp.gpg                  annex.largefiles=nothing
+*.cpp.asc                  annex.largefiles=nothing
+
+*.py                       annex.largefiles=nothing
+*.py.gpg                   annex.largefiles=nothing
+*.py.asc                   annex.largefiles=nothing
+
+*.sh                       annex.largefiles=nothing
+*.sh.gpg                   annex.largefiles=nothing
+*.sh.asc                   annex.largefiles=nothing
+
+*.rb                       annex.largefiles=nothing
+*.rb.gpg                   annex.largefiles=nothing
+*.rb.asc                   annex.largefiles=nothing
+
+*.js                       annex.largefiles=nothing
+*.js.gpg                   annex.largefiles=nothing
+*.js.asc                   annex.largefiles=nothing
+
+*.ts                       annex.largefiles=nothing
+*.ts.gpg                   annex.largefiles=nothing
+*.ts.asc                   annex.largefiles=nothing
+
+*.java                     annex.largefiles=nothing
+*.java.gpg                 annex.largefiles=nothing
+*.java.asc                 annex.largefiles=nothing
+
+*.go                       annex.largefiles=nothing
+*.go.gpg                   annex.largefiles=nothing
+*.go.asc                   annex.largefiles=nothing
+
+*.rs                       annex.largefiles=nothing
+*.rs.gpg                   annex.largefiles=nothing
+*.rs.asc                   annex.largefiles=nothing
+
+*.scm                      annex.largefiles=nothing
+*.scm.gpg                  annex.largefiles=nothing
+*.scm.asc                  annex.largefiles=nothing
+
+*.el                       annex.largefiles=nothing
+*.el.gpg                   annex.largefiles=nothing
+*.el.asc                   annex.largefiles=nothing
+
+# Never annex small text documents
+*.txt                      annex.largefiles=nothing
+*.txt.gpg                  annex.largefiles=nothing
+*.txt.asc                  annex.largefiles=nothing
+
+*.md                       annex.largefiles=nothing
+*.md.gpg                   annex.largefiles=nothing
+*.md.asc                   annex.largefiles=nothing
+
+*.org                      annex.largefiles=nothing
+*.org.gpg                  annex.largefiles=nothing
+*.org.asc                  annex.largefiles=nothing
+
+*.rst                      annex.largefiles=nothing
+*.rst.gpg                  annex.largefiles=nothing
+*.rst.asc                  annex.largefiles=nothing
+
+# Always annex binary/media/document files
+*.pdf                      annex.largefiles=anything
+*.pdf.gpg                  annex.largefiles=anything
+*.pdf.asc                  annex.largefiles=anything
+
+*.zip                      annex.largefiles=anything
+*.zip.gpg                  annex.largefiles=anything
+*.zip.asc                  annex.largefiles=anything
+
+*.tar.gz                   annex.largefiles=anything
+*.tar.gz.gpg               annex.largefiles=anything
+*.tar.gz.asc               annex.largefiles=anything
+
+*.mp4                      annex.largefiles=anything
+*.mp4.gpg                  annex.largefiles=anything
+*.mp4.asc                  annex.largefiles=anything
+
+*.mp3                      annex.largefiles=anything
+*.mp3.gpg                  annex.largefiles=anything
+*.mp3.asc                  annex.largefiles=anything
+
+*.wav                      annex.largefiles=anything
+*.wav.gpg                  annex.largefiles=anything
+*.wav.asc                  annex.largefiles=anything
+
+*.png                      annex.largefiles=anything
+*.png.gpg                  annex.largefiles=anything
+*.png.asc                  annex.largefiles=anything
+
+*.jpg                      annex.largefiles=anything
+*.jpg.gpg                  annex.largefiles=anything
+*.jpg.asc                  annex.largefiles=anything
+
+*.jpeg                     annex.largefiles=anything
+*.jpeg.gpg                 annex.largefiles=anything
+*.jpeg.asc                 annex.largefiles=anything
+
+*.webp                     annex.largefiles=anything
+*.webp.gpg                 annex.largefiles=anything
+*.webp.asc                 annex.largefiles=anything
+
+*.iso                      annex.largefiles=anything
+*.iso.gpg                  annex.largefiles=anything
+*.iso.asc                  annex.largefiles=anything
+
+# Optional: never annex dotfiles or control files
+.*                         annex.largefiles=nothing
+.*.gpg                     annex.largefiles=nothing
+.*.asc                     annex.largefiles=nothing
+

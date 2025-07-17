@@ -1,0 +1,11 @@
+
+## In .git/config add below
+# [include]
+#     path = ../.gitconfig
+## or run
+# git config -l include.path ../.gitconfig
+
+
+
+[template]
+	enable = true

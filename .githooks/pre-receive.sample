@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#
+# An example hook script to make use of push options.
+# The example simply echoes all push options that start with 'echoback='
+# and rejects all pushes when the "reject" push option is used.
+#
+# To enable this hook, rename this file to "pre-receive".
+
+
+if [ -e .githooks/annex/stop.sh ]
+then
+  if git rev-parse --is-inside-work-tree >/dev/null 2>&1
+  then
+    GIT_ROOT=$(git root)
+    # Check if it is a git-annex repository
+    if [ -d "${GIT_ROOT}/annex" ] # timeout 2s git annex info >/dev/null 2>&
+    then
+      if [ -r "${GIT_ROOT}/.git/annex/daemon.pid" ] && xargs ps < "${GIT_ROOT}/.git/annex/daemon.pid"
+      then
+        .githooks/annex/stop.sh $(cat "${GIT_DIR}/annex/daemon.pid")
+      fi
+    fi
+  fi
+fi
+
+
+if test -n "$GIT_PUSH_OPTION_COUNT"
+then
+	i=0
+	while test "$i" -lt "$GIT_PUSH_OPTION_COUNT"
+	do
+		eval "value=\$GIT_PUSH_OPTION_$i"
+		case "$value" in
+		echoback=*)
+			echo "echo from the pre-receive-hook: ${value#*=}" >&2
+			;;
+		reject)
+			exit 1
+		esac
+		i=$((i + 1))
+	done
+fi
