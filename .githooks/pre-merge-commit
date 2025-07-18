@@ -17,6 +17,9 @@ then
     # Check if it is a git-annex repository
     if [ -d "${GIT_DIR}/annex" ] # timeout 2s git annex info >/dev/null 2>&
     then
+      if .githooks/annex/git-annex-assistant-allowed.sh
+      then
+      fi
       if [ -r "${GIT_DIR}/annex/daemon.pid" ] && xargs ps < "${GIT_DIR}/annex/daemon.pid" || .githooks/annex/git-annex-assistant-allowed.sh
       then
         .githooks/annex/stop.sh $(cat "${GIT_DIR}/annex/daemon.pid")
