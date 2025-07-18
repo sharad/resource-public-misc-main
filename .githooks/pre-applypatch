@@ -25,6 +25,12 @@ then
         else
           echo "$0: ✅ NOTICE: git annex assistant not running."
         fi
+        if [ -e "${GIT_DIR}/hooks/pre-applypatch"  ]
+        then
+          "${GIT_DIR}/hooks/pre-applypatch"
+        else
+          echo No git annex command for hooks/pre-applypatch >/dev/null 2>&1
+        fi
       fi
   fi
 fi

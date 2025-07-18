@@ -56,15 +56,16 @@ then
     # Check if it is a git-annex repository
     if [ -d "${GIT_DIR}/annex" ] # timeout 2s git annex info >/dev/null 2>&
     then
-      if "${GIT_DIR}/hooks/pre-commit"
+      if [ -r "${GIT_DIR}/annex/daemon.pid" ] && xargs ps < "${GIT_DIR}/annex/daemon.pid"
       then
-        if [ -r "${GIT_DIR}/annex/daemon.pid" ] && xargs ps < "${GIT_DIR}/annex/daemon.pid"
-        then
-				  .githooks/annex/stop.sh $(cat "${GIT_DIR}/annex/daemon.pid")
-          echo "$0: ⚠️  WARNING: stopping git annex assistant."
-        else
-          echo "$0: ✅ NOTICE: git annex assistant not running."
-			  fi
+				.githooks/annex/stop.sh $(cat "${GIT_DIR}/annex/daemon.pid")
+        echo "$0: ⚠️  WARNING: stopping git annex assistant."
+      else
+        echo "$0: ✅ NOTICE: git annex assistant not running."
+			fi
+      if [ -e "${GIT_DIR}/hooks/pre-commit" ]
+      then
+        "${GIT_DIR}/hooks/pre-commit"
       else
         # automatically configured by git-annex
         git annex pre-commit .

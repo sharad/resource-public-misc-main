@@ -31,6 +31,12 @@ then
       else
         echo "$0: ✅ NOTICE: git annex assistant not running."
 			fi
+      if [ -e "${GIT_DIR}/hooks/pre-rebase"  ]
+      then
+        "${GIT_DIR}/hooks/pre-rebase"
+      else
+        echo No git annex command for hooks/pre-rebase >/dev/null 2>&1
+      fi
 		fi
   fi
 fi
